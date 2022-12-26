@@ -3,18 +3,17 @@
 #第一次使用请填好你的BDUSS, fid, tbs
 
 import requests
-import json
 import hashlib
 import time
 from urllib.parse import urlencode
 
 def GetThread(url):
-    global tid, lastThread
+    global fid, lastThread
     tmp = 0
     response = requests.get(url).json()
     for i in response['post_list']:
         s = i['forum_id']
-        if s == tid: #在目标贴吧发帖了
+        if s == fid: #在目标贴吧发帖了
             t = int(i['create_time'])
             if t > lastThread: #发了新贴
                 if t > tmp: #仅更新1次
@@ -26,12 +25,12 @@ def GetThread(url):
     return
 
 def GetRepost(url):
-    global tid, lastRepost
+    global fid, lastRepost
     tmp = 0
     response = requests.get(url).json() #这里json中的time和id是int类型的
     for i in response['post_list']:
         s = i['forum_id']
-        if s == int(tid):
+        if s == int(fid):
             t = i['create_time']
             if t > lastRepost: #回了新帖
                 if t > tmp:
@@ -79,8 +78,6 @@ def sign(src):
     
 
 #初始化
-tid = '27779526' #最爱春雷吧id
-#tid = '69399' #永动机吧id, 仅测试使用
 uid = '6317885792' #何杂id
 lastThread = 0
 lastRepost = 0
@@ -103,8 +100,9 @@ urlRepost = 'http://c.tieba.baidu.com/c/u/feed/userpost?' + urlencode(paramRepos
 #fid请用 http://tieba.baidu.com/f/commit/share/fnameShareApi?ie=utf-8&fname=吧名 获取
 #tbs请用 http://tieba.baidu.com/dc/common/tbs 获取
 BDUSS = '你的BDUSS'
-fid = '你的fid'
 tbs = '你的tbs'
+fid = '27779526' #最爱春雷吧id
+#fid = '69399' #永动机吧id, 仅测试使用
 
 paramDT = {'BDUSS': BDUSS,
            'fid': fid,
